@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desencriptador de Dispositivo</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Estilos para la pantalla de acceso concedido */
+        .acceso-concedido {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black;
+            color: green;
+            font-size: 36px;
+            text-align: center;
+            display: none;
+            z-index: 9999;
+        }
+
+        /* Estilos para el mensaje de descarga de archivos */
+        #message {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: green;
+            font-size: 24px;
+            text-align: center;
+        }
+
+        /* Estilos para las letras cayendo */
+        .falling-text {
+            position: absolute;
+            color: green;
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="acceso-concedido" id="accesoConcedido">
+        <p>ACCESO CONCEDIDO</p>
+    </div>
+
+    <p id="message">Descargando archivos... 1/1574</p>
+
+    <div id="background"></div>
+    <div class="container" id="container">
+        <h2 id="title">INGRESE EL CÓDIGO</h2>
+        <input type="password" id="password" placeholder="Código">
+        <button onclick="checkPassword()">Acceder</button>
+        <p id="errorMessage"></p>
+    </div>
+
+    <script>
+        function checkPassword() {
+            var password = document.getElementById("password").value;
+            if (password === "2615") {
+                document.getElementById("container").style.display = "none"; // Ocultar el contenedor de ingreso de código
+                document.getElementById("accesoConcedido").style.display = "block"; // Mostrar la pantalla de acceso concedido
+                document.getElementById("message").style.display = "block"; // Mostrar el mensaje de descarga de archivos
+                downloadFiles();
+            } else {
+                document.getElementById("errorMessage").innerHTML = "Código incorrecto. Inténtalo de nuevo.";
+            }
+        }
+
+        function downloadFiles() {
+            var counter = 1; // Comenzamos desde 1
+            var totalFiles = 1574; // Cantidad total de archivos a descargar
+
+            var downloadInterval = setInterval(function() {
+                counter++;
+                if (counter <= totalFiles) {
+                    document.getElementById("message").innerHTML = "Descargando archivos... " + counter + "/" + totalFiles;
+                } else {
+                    clearInterval(downloadInterval);
+                }
+            }, 50); // Intervalo de tiempo entre cada archivo descargado (en milisegundos)
+        }
+
+        // Función para crear letras cayendo
+        function createFallingText() {
+            var characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var fallingText = document.createElement("span");
+            fallingText.className = "falling-text";
+            fallingText.innerText = characters.charAt(Math.floor(Math.random() * characters.length));
+            fallingText.style.left = Math.random() * window.innerWidth + "px";
+            fallingText.style.top = Math.random() * window.innerHeight + "px";
+            fallingText.style.animationDuration = Math.random() * 5 + 2 + "s";
+            fallingText.style.opacity = Math.random();
+            document.body.appendChild(fallingText);
+            setTimeout(function() {
+                fallingText.remove();
+            }, 5000);
+        }
+
+        setInterval(createFallingText, 100); // Llamada a la función cada 100ms
+    </script>
+</body>
+</html>
